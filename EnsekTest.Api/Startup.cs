@@ -1,4 +1,5 @@
 using Autofac;
+using EnsekTest.Service.ModuleRegistration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -69,8 +70,7 @@ namespace EnsekTest.Api
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            // Use and configure Autofac
-            //builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new ServiceModule());
         }
     }
 }

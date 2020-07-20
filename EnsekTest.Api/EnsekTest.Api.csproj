@@ -12,5 +12,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EnsekTest.Service.ModuleRegistration\EnsekTest.Service.ModuleRegistration.csproj" />
+  </ItemGroup>
+
 
 </Project>
