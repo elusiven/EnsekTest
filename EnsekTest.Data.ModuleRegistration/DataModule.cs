@@ -20,6 +20,11 @@ namespace EnsekTest.Data.ModuleRegistration
                 .InstancePerLifetimeScope();
 
             builder
+                .RegisterType<MeterReadingRepository>()
+                .As<IMeterReadingRepository>()
+                .InstancePerLifetimeScope();
+
+            builder
                 .RegisterInstance(new DatabaseConnection(_connectionString))
                 .SingleInstance();
         }
