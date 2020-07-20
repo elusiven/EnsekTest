@@ -1,4 +1,5 @@
 using Autofac;
+using EnsekTest.Data.ModuleRegistration;
 using EnsekTest.Service.ModuleRegistration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -71,6 +72,7 @@ namespace EnsekTest.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new ServiceModule());
+            builder.RegisterModule(new DataModule(Configuration.GetConnectionString("SqlServer")));
         }
     }
 }

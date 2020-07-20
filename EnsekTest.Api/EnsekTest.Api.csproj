@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EnsekTest.Data.ModuleRegistration\EnsekTest.Data.ModuleRegistration.csproj" />
     <ProjectReference Include="..\EnsekTest.Service.ModuleRegistration\EnsekTest.Service.ModuleRegistration.csproj" />
   </ItemGroup>
 
