@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using EnsekTest.Service.Abstractions;
 
 namespace EnsekTest.Service.ModuleRegistration
 {
@@ -6,10 +7,15 @@ namespace EnsekTest.Service.ModuleRegistration
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder
-            //    .RegisterType<EmailProcessingService>()
-            //    .As<IEmailProcessingService>()
-            //    .InstancePerLifetimeScope();
+            builder
+                .RegisterType<MeterReadingService>()
+                .As<IMeterReadingService>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<AccountService>()
+                .As<IAccountService>()
+                .InstancePerLifetimeScope();
         }
     }
 }

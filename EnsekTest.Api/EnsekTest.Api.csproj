@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
@@ -14,7 +15,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EnsekTest.Data.ModuleRegistration\EnsekTest.Data.ModuleRegistration.csproj" />
+    <ProjectReference Include="..\EnsekTest.Service.Abstractions\EnsekTest.Service.Abstractions.csproj" />
+    <ProjectReference Include="..\EnsekTest.Service.MappingProfiles\EnsekTest.Service.MappingProfiles.csproj" />
     <ProjectReference Include="..\EnsekTest.Service.ModuleRegistration\EnsekTest.Service.ModuleRegistration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 
