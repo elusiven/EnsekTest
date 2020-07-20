@@ -1,4 +1,9 @@
 using Autofac;
+using AutoMapper;
+using EnsekTest.Api.Middleware;
+using EnsekTest.Data.ModuleRegistration;
+using EnsekTest.Service.MappingProfiles;
+using EnsekTest.Service.ModuleRegistration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +28,7 @@ namespace EnsekTest.Api
             services.AddControllers();
 
             services.AddSwaggerGen();
+            services.AddAutoMapper(typeof(AutoMapping));
 
             // Register API versioning
             services.AddApiVersioning(o =>
@@ -43,11 +49,10 @@ namespace EnsekTest.Api
 
             app.UseHttpsRedirection();
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
+            RegisterCustomMiddlewares(app);
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ensek Meter Reading Data API V1");
@@ -69,8 +74,17 @@ namespace EnsekTest.Api
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            // Use and configure Autofac
-            //builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new ServiceModule());
+            builder.RegisterModule(new DataModule(Configuration.GetConnectionString("SqlServer")));
+        }
+
+        /// <summary>
+        /// Registers custom middleware
+        /// </summary>
+        /// <param name="app"></param>
+        private void RegisterCustomMiddlewares(IApplicationBuilder app)
+        {
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
         }
     }
 }
