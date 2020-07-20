@@ -60,6 +60,23 @@ namespace EnsekTest.Data
             return entity;
         }
 
+        public async Task<MeterReading> GetMeterReadingByAccountIdAsync(int accountId, CancellationToken cancellationToken)
+        {
+            MeterReading entity = new MeterReading();
+
+            await Task.Run(async () =>
+            {
+                const string query = @"SELECT MeterReadingId, AccountId, MeterReadingDateTime, MeterReadValue FROM dbo.MeterReading WHERE AccountId = @AccountId";
+
+                using (var connection = new SqlConnection(_databaseConnection.Value))
+                {
+                    entity = await connection.QueryFirstOrDefaultAsync<MeterReading>(query, new { AccountId = accountId });
+                }
+            }, cancellationToken);
+
+            return entity;
+        }
+
         public async Task<bool> CreateMeterReadingAsync(MeterReading meterReading, CancellationToken cancellationToken)
         {
             bool isSuccess = false;
@@ -81,9 +98,25 @@ namespace EnsekTest.Data
             return isSuccess;
         }
 
-        public Task<bool> UpdateMeterReadingAsync(MeterReading account, CancellationToken cancellationToken)
+        public async Task<bool> UpdateMeterReadingAsync(MeterReading meterReading, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            bool isSuccess = false;
+
+            await Task.Run(async () =>
+            {
+                const string query = @"UPDATE dbo.MeterReading SET MeterReadingDateTime = @MeterReadingDateTime,  MeterReadValue = @MeterReadValue WHERE AccountId = @AccountId; ";
+
+                using (var conn = new SqlConnection(_databaseConnection.Value))
+                {
+                    var result = await conn.ExecuteAsync(
+                        query,
+                        new { MeterReadingDateTime = meterReading.MeterReadingDateTime, MeterReadValue = meterReading.MeterReadValue, AccountId = meterReading.AccountId });
+
+                    isSuccess = result > 0;
+                }
+            }, cancellationToken);
+
+            return isSuccess;
         }
 
         public Task<bool> DeleteMeterReadingAsync(int id, CancellationToken cancellationToken)

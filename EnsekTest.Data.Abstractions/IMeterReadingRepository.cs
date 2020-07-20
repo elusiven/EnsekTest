@@ -14,6 +14,8 @@ namespace EnsekTest.Data.Abstractions
 
         Task<MeterReading> GetMeterReadingAsync(int id, CancellationToken cancellationToken);
 
+        Task<MeterReading> GetMeterReadingByAccountIdAsync(int accountId, CancellationToken cancellationToken);
+
         Task<bool> CreateMeterReadingAsync(MeterReading account, CancellationToken cancellationToken);
 
         Task<bool> UpdateMeterReadingAsync(MeterReading account, CancellationToken cancellationToken);

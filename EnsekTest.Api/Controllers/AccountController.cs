@@ -16,7 +16,7 @@ namespace EnsekTest.Api.Controllers
     public class AccountController : ControllerBase
     {
         [HttpPost("import")]
-        public async Task<IActionResult> Import([FromForm] IFormFile file)
+        public async Task<IActionResult> Import(IFormFile file)
         {
             using (var sr = new StreamReader(file.OpenReadStream()))
             {
