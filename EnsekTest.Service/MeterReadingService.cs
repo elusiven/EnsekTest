@@ -79,18 +79,21 @@ namespace EnsekTest.Service
                     {
                         List<MeterReadingResource> records = new List<MeterReadingResource>();
 
-                        try
+                        csv.Configuration.RegisterClassMap<MeterReadingMap>();
+                        csv.Configuration.BadDataFound = context =>
+                            _logger.LogWarning("Validation failed for one of the fields");
+
+                        while (csv.Read())
                         {
-                            csv.Configuration.RegisterClassMap<MeterReadingMap>();
-                            while (csv.Read())
+                            try
                             {
                                 var record = csv.GetRecord<MeterReadingResource>();
                                 records.Add(record);
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.LogError(e.Message);
+                            catch (Exception e)
+                            {
+                                _logger.LogWarning(e.Message);
+                            }
                         }
 
                         if (!records.Any())

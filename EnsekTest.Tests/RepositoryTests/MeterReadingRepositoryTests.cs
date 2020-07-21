@@ -46,7 +46,7 @@ namespace EnsekTest.Tests.RepositoryTests
             var meterReadingRepository = new MeterReadingRepository(DatabaseConnection);
             var meterReading = new MeterReading()
             {
-                MeterReadValue = 3124,
+                MeterReadValue = "3124",
                 MeterReadingDateTime = new DateTime(2020, 06, 19, 5, 20, 45),
                 AccountId = 1
             };
