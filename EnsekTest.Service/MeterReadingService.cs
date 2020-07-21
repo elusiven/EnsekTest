@@ -1,22 +1,20 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using CsvHelper;
 using EnsekTest.Data.Abstractions;
 using EnsekTest.Data.Primitives.Entities;
 using EnsekTest.Service.Abstractions;
+using EnsekTest.Service.Common.CSVMaps;
 using EnsekTest.Service.Common.Exceptions;
 using EnsekTest.Service.Primitives.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CsvHelper.TypeConversion;
-using EnsekTest.Service.Common.CSVMaps;
 
 namespace EnsekTest.Service
 {
@@ -25,15 +23,18 @@ namespace EnsekTest.Service
         private readonly ILogger<MeterReadingService> _logger;
         private readonly IMapper _mapper;
         private readonly IMeterReadingRepository _meterReadingRepository;
+        private readonly IAccountService _accountService;
 
         public MeterReadingService(
             ILogger<MeterReadingService> logger,
             IMapper mapper,
-            IMeterReadingRepository meterReadingRepository)
+            IMeterReadingRepository meterReadingRepository,
+            IAccountService accountService)
         {
             _logger = logger;
             _mapper = mapper;
             _meterReadingRepository = meterReadingRepository;
+            _accountService = accountService;
         }
 
         public async Task<HashSet<MeterReadingResource>> GetAllMeterReadingsAsync(CancellationToken cancellationToken = default)
@@ -110,6 +111,15 @@ namespace EnsekTest.Service
                                 await GetMeterReadingByAccountIdAsync(meterReadingResource.AccountId,
                                     cancellationToken);
 
+                            var associatedAccount =
+                                await _accountService.GetAccountAsync(meterReadingResource.AccountId);
+
+                            if (associatedAccount == null)
+                            {
+                                _logger.LogWarning($"Meter reading with account ID {meterReadingResource.AccountId} does not have an associated account in the database.");
+                                continue;
+                            }
+
                             if (existingMeterReadingResource == null && !duplicateEntries.Contains(meterReadingResource.AccountId))
                             {
                                 await CreateMeterReadingAsync(meterReadingResource, cancellationToken);
@@ -124,6 +134,7 @@ namespace EnsekTest.Service
 
         public async Task CreateMeterReadingAsync(MeterReadingResource model, CancellationToken cancellationToken = default)
         {
+            if (model == null) throw new MeterReadingServiceException("Resource model can not be null");
             _logger.LogInformation("Creating new meter reading");
 
             var entity = _mapper.Map<MeterReading>(model);
