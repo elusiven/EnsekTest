@@ -119,9 +119,25 @@ namespace EnsekTest.Data
             return isSuccess;
         }
 
-        public Task<bool> DeleteMeterReadingAsync(int id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteMeterReadingAsync(int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            bool isSuccess = false;
+
+            await Task.Run(async () =>
+            {
+                const string query = @"DELETE FROM dbo.MeterReading WHERE MeterReadingId = @MeterReadingId";
+
+                using (var conn = new SqlConnection(_databaseConnection.Value))
+                {
+                    var result = await conn.ExecuteAsync(
+                        query,
+                        new { MeterReadingId = id });
+
+                    isSuccess = result > 0;
+                }
+            }, cancellationToken);
+
+            return isSuccess;
         }
     }
 }
