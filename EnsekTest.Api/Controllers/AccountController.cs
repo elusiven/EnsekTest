@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EnsekTest.Service.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,14 +16,17 @@ namespace EnsekTest.Api.Controllers
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
+        private readonly IAccountService _accountService;
+
+        public AccountController(IAccountService accountService)
+        {
+            _accountService = accountService;
+        }
+
         [HttpPost("import")]
         public async Task<IActionResult> Import(IFormFile file)
         {
-            using (var sr = new StreamReader(file.OpenReadStream()))
-            {
-                var content = await sr.ReadToEndAsync();
-                return Ok(content);
-            }
+            return Ok(await _accountService.ImportAccountsFromCSV(file));
         }
     }
 }
