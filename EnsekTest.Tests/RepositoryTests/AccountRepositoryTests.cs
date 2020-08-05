@@ -17,7 +17,7 @@ namespace EnsekTest.Tests.RepositoryTests
             var accountRepository = new AccountRepository(DatabaseConnection);
 
             // Act
-            var results = await accountRepository.GetAllAccountsAsync(new CancellationToken(false));
+            var results = await accountRepository.GetAllAccountsAsync();
 
             // Assert
             Assert.IsNotNull(accountRepository);
@@ -31,7 +31,7 @@ namespace EnsekTest.Tests.RepositoryTests
             var accountRepository = new AccountRepository(DatabaseConnection);
 
             // Act
-            var result = await accountRepository.GetAccountAsync(1, new CancellationToken(false));
+            var result = await accountRepository.GetAccountAsync(1);
 
             // Assert
             Assert.IsNotNull(accountRepository);
@@ -50,7 +50,7 @@ namespace EnsekTest.Tests.RepositoryTests
             };
 
             // Act
-            var result = await accountRepository.CreateAccountAsync(account, new CancellationToken(false));
+            var result = await accountRepository.CreateAccountAsync(account);
 
             // Assert
             Assert.IsNotNull(accountRepository);

@@ -34,91 +34,87 @@ namespace EnsekTest.Service
             _mapper = mapper;
         }
 
-        public async Task<HashSet<AccountResource>> GetAllAccountsAsync(CancellationToken cancellationToken = default)
+        public async Task<HashSet<AccountResource>> GetAllAccountsAsync()
         {
             _logger.LogInformation("Fetching all accounts from the database");
             HashSet<AccountResource> accountResources = new HashSet<AccountResource>();
 
-            var results = await _accountRepository.GetAllAccountsAsync(cancellationToken);
+            var results = await _accountRepository.GetAllAccountsAsync();
             accountResources = _mapper.Map<HashSet<AccountResource>>(results);
 
             return accountResources;
         }
 
-        public async Task<AccountResource> GetAccountAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<AccountResource> GetAccountAsync(int id)
         {
             _logger.LogInformation("Fetching a single account from the database");
             AccountResource accountResource = new AccountResource();
 
-            var result = await _accountRepository.GetAccountAsync(id, cancellationToken);
+            var result = await _accountRepository.GetAccountAsync(id);
             accountResource = _mapper.Map<AccountResource>(result);
 
             return accountResource;
         }
 
-        public async Task<bool> ImportAccountsFromCSV(IFormFile file, CancellationToken cancellationToken = default)
+        public async Task<bool> ImportAccountsFromCSV(IFormFile file)
         {
             bool succeeded = true;
 
-            await Task.Run(async () =>
+            using (var reader = new StreamReader(file.OpenReadStream()))
             {
-                using (var reader = new StreamReader(file.OpenReadStream()))
+                using (var csv = new CsvReader(reader, CultureInfo.CurrentCulture))
                 {
-                    using (var csv = new CsvReader(reader, CultureInfo.CurrentCulture))
+                    List<AccountResource> records = new List<AccountResource>();
+
+                    try
                     {
-                        List<AccountResource> records = new List<AccountResource>();
-
-                        try
+                        csv.Configuration.RegisterClassMap<AccountMap>();
+                        while (csv.Read())
                         {
-                            csv.Configuration.RegisterClassMap<AccountMap>();
-                            while (csv.Read())
-                            {
-                                var record = csv.GetRecord<AccountResource>();
-                                records.Add(record);
-                            }
+                            var record = csv.GetRecord<AccountResource>();
+                            records.Add(record);
                         }
-                        catch (Exception e)
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e.Message);
+                    }
+
+                    if (!records.Any())
+                    {
+                        succeeded = false;
+                        throw new AccountServiceException(
+                            "Could not extract any data from this file.");
+                    }
+
+                    var duplicateEntries = records.GroupBy(x => x.AccountId)
+                        .Where(g => g.Count() > 1)
+                        .Select(y => y.Key)
+                        .ToList();
+
+                    foreach (AccountResource accountResource in records)
+                    {
+                        var existingAccountResource =
+                            await GetAccountAsync(accountResource.AccountId);
+
+                        if (existingAccountResource == null && !duplicateEntries.Contains(accountResource.AccountId))
                         {
-                            _logger.LogError(e.Message);
-                        }
-
-                        if (!records.Any())
-                        {
-                            succeeded = false;
-                            throw new AccountServiceException(
-                                "Could not extract any data from this file.");
-                        }
-
-                        var duplicateEntries = records.GroupBy(x => x.AccountId)
-                            .Where(g => g.Count() > 1)
-                            .Select(y => y.Key)
-                            .ToList();
-
-                        foreach (AccountResource accountResource in records)
-                        {
-                            var existingAccountResource =
-                                await GetAccountAsync(accountResource.AccountId,
-                                    cancellationToken);
-
-                            if (existingAccountResource == null && !duplicateEntries.Contains(accountResource.AccountId))
-                            {
-                                await CreateAccountAsync(accountResource, cancellationToken);
-                            }
+                            await CreateAccountAsync(accountResource);
                         }
                     }
                 }
-            }, cancellationToken);
+            }
 
             return succeeded;
         }
 
-        public async Task CreateAccountAsync(AccountResource model, CancellationToken cancellationToken = default)
+        public async Task CreateAccountAsync(AccountResource model)
         {
             if (model == null) throw new AccountServiceException("Resource model cannot be null");
             _logger.LogInformation("Creating a new account record in the database");
 
             var entity = _mapper.Map<Account>(model);
-            var succeeded = await _accountRepository.CreateAccountAsync(entity, cancellationToken);
+            var succeeded = await _accountRepository.CreateAccountAsync(entity);
 
             if (!succeeded)
             {
@@ -128,12 +124,12 @@ namespace EnsekTest.Service
             }
         }
 
-        public Task UpdateAccountAsync(AccountResource model, CancellationToken cancellationToken = default)
+        public Task UpdateAccountAsync(AccountResource model)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteAccountAsync(int id, CancellationToken cancellationToken = default)
+        public Task DeleteAccountAsync(int id)
         {
             throw new System.NotImplementedException();
         }

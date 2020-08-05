@@ -8,16 +8,16 @@ namespace EnsekTest.Service.Abstractions
 {
     public interface IAccountService
     {
-        Task<HashSet<AccountResource>> GetAllAccountsAsync(CancellationToken cancellationToken = default);
+        Task<HashSet<AccountResource>> GetAllAccountsAsync();
 
-        Task<AccountResource> GetAccountAsync(int id, CancellationToken cancellationToken = default);
+        Task<AccountResource> GetAccountAsync(int id);
 
-        Task<bool> ImportAccountsFromCSV(IFormFile file, CancellationToken cancellationToken = default);
+        Task<bool> ImportAccountsFromCSV(IFormFile file);
 
-        Task CreateAccountAsync(AccountResource modelResource, CancellationToken cancellationToken = default);
+        Task CreateAccountAsync(AccountResource modelResource);
 
-        Task UpdateAccountAsync(AccountResource modelResource, CancellationToken cancellationToken = default);
+        Task UpdateAccountAsync(AccountResource modelResource);
 
-        Task DeleteAccountAsync(int id, CancellationToken cancellationToken = default);
+        Task DeleteAccountAsync(int id);
     }
 }

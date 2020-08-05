@@ -11,19 +11,18 @@ namespace EnsekTest.Service.Abstractions
 {
     public interface IMeterReadingService
     {
-        Task<HashSet<MeterReadingResource>> GetAllMeterReadingsAsync(CancellationToken cancellationToken = default);
+        Task<HashSet<MeterReadingResource>> GetAllMeterReadingsAsync();
 
-        Task<MeterReadingResource> GetMeterReadingAsync(int id, CancellationToken cancellationToken = default);
+        Task<MeterReadingResource> GetMeterReadingAsync(int id);
 
-        Task<MeterReadingResource> GetMeterReadingByAccountIdAsync(int accountId,
-            CancellationToken cancellationToken = default);
+        Task<MeterReadingResource> GetMeterReadingByAccountIdAsync(int accountId);
 
-        Task<bool> ImportMeterReadingsFromCSV(IFormFile file, CancellationToken cancellationToken = default);
+        Task<bool> ImportMeterReadingsFromCSV(IFormFile file);
 
-        Task CreateMeterReadingAsync(MeterReadingResource model, CancellationToken cancellationToken = default);
+        Task CreateMeterReadingAsync(MeterReadingResource model);
 
-        Task UpdateMeterReadingAsync(MeterReadingResource model, CancellationToken cancellationToken = default);
+        Task UpdateMeterReadingAsync(MeterReadingResource model);
 
-        Task DeleteMeterReadingAsync(int id, CancellationToken cancellationToken = default);
+        Task DeleteMeterReadingAsync(int id);
     }
 }

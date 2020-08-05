@@ -10,14 +10,14 @@ namespace EnsekTest.Data.Abstractions
 {
     public interface IAccountRepository
     {
-        Task<IEnumerable<Account>> GetAllAccountsAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<Account>> GetAllAccountsAsync();
 
-        Task<Account> GetAccountAsync(int id, CancellationToken cancellationToken);
+        Task<Account> GetAccountAsync(int id);
 
-        Task<bool> CreateAccountAsync(Account account, CancellationToken cancellationToken);
+        Task<bool> CreateAccountAsync(Account account);
 
-        Task<bool> UpdateAccountAsync(Account account, CancellationToken cancellationToken);
+        Task<bool> UpdateAccountAsync(Account account);
 
-        Task<bool> DeleteAccountAsync(int id, CancellationToken cancellationToken);
+        Task<bool> DeleteAccountAsync(int id);
     }
 }
