@@ -1,25 +1,21 @@
-﻿using System;
+﻿using EnsekTest.Data.Primitives.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using EnsekTest.Data.Primitives.Entities;
 
 namespace EnsekTest.Data.Abstractions
 {
     public interface IMeterReadingRepository
     {
-        Task<IEnumerable<MeterReading>> GetAllMeterReadingsAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<MeterReading>> GetAllMeterReadingsAsync();
 
-        Task<MeterReading> GetMeterReadingAsync(int id, CancellationToken cancellationToken);
+        Task<MeterReading> GetMeterReadingAsync(int id);
 
-        Task<MeterReading> GetMeterReadingByAccountIdAsync(int accountId, CancellationToken cancellationToken);
+        Task<MeterReading> GetMeterReadingByAccountIdAsync(int accountId);
 
-        Task<bool> CreateMeterReadingAsync(MeterReading account, CancellationToken cancellationToken);
+        Task<bool> CreateMeterReadingAsync(MeterReading account);
 
-        Task<bool> UpdateMeterReadingAsync(MeterReading account, CancellationToken cancellationToken);
+        Task<bool> UpdateMeterReadingAsync(MeterReading account);
 
-        Task<bool> DeleteMeterReadingAsync(int id, CancellationToken cancellationToken);
+        Task<bool> DeleteMeterReadingAsync(int id);
     }
 }
