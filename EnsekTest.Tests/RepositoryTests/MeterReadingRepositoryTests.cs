@@ -18,7 +18,7 @@ namespace EnsekTest.Tests.RepositoryTests
             var meterReadingRepository = new MeterReadingRepository(DatabaseConnection);
 
             // Act
-            var results = await meterReadingRepository.GetAllMeterReadingsAsync(new CancellationToken(false));
+            var results = await meterReadingRepository.GetAllMeterReadingsAsync();
 
             // Assert
             Assert.IsNotNull(meterReadingRepository);
@@ -32,7 +32,7 @@ namespace EnsekTest.Tests.RepositoryTests
             var meterReadingRepository = new MeterReadingRepository(DatabaseConnection);
 
             // Act
-            var result = await meterReadingRepository.GetMeterReadingAsync(1, new CancellationToken(false));
+            var result = await meterReadingRepository.GetMeterReadingAsync(1);
 
             // Assert
             Assert.IsNotNull(meterReadingRepository);
@@ -46,13 +46,13 @@ namespace EnsekTest.Tests.RepositoryTests
             var meterReadingRepository = new MeterReadingRepository(DatabaseConnection);
             var meterReading = new MeterReading()
             {
-                MeterReadValue = 3124,
+                MeterReadValue = "3124",
                 MeterReadingDateTime = new DateTime(2020, 06, 19, 5, 20, 45),
                 AccountId = 1
             };
 
             // Act
-            var result = await meterReadingRepository.CreateMeterReadingAsync(meterReading, new CancellationToken(false));
+            var result = await meterReadingRepository.CreateMeterReadingAsync(meterReading);
 
             // Assert
             Assert.IsNotNull(meterReadingRepository);
